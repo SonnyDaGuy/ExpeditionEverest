@@ -13,8 +13,9 @@ public class Player
 
     public enum ID
     {
-        player0 = 0,
+        NULL = 0,
         player1 = 1,
+        player2 = 2
     }
 
     public Player(ID playerID)

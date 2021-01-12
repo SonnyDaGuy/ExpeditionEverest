@@ -36,6 +36,11 @@ public class User : MonoBehaviour
 
     public ControllerType GetController()
     {
+        if(_player.id == 0)
+        {
+            return ControllerType.Keyboard;
+        }
+
         Rewired.Controller controller = _player.controllers.GetLastActiveController();
 
 #if UNITY_EDITOR
@@ -49,10 +54,7 @@ public class User : MonoBehaviour
         {
             case Rewired.ControllerType.Keyboard:
                 return ControllerType.Keyboard;
-            case Rewired.ControllerType.Joystick:
-            case Rewired.ControllerType.Mouse:
             default:
-                Debug.Log("Unknown controller type, using Xbox");
                 return ControllerType.Xbox;
         }
     }
