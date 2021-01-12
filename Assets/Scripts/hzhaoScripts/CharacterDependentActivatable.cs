@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CharacterDependentActivatable : Activatable
 {
+    //beviour type for dog
     public enum BehaviourType { 
         digging
     }
@@ -11,6 +12,7 @@ public class CharacterDependentActivatable : Activatable
     [SerializeField] private BehaviourType behaviourForActivate;
     public GameObject prefab1;
 
+    //active by dog to spawn item
     public override void Activate(CharacterController characterController) 
     {
         if (characterController.GetCharacterType() == CharacterType.Dog) {
