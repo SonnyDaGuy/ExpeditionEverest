@@ -16,18 +16,18 @@ public class PlayerSpawn : MonoBehaviour
         CurrentGameMode.SetGameMode(_gameMode); //temp
 
         List<Player> players = InstantiatePlayers(_gameMode);
+        GameObject explorer = null;
         if(CurrentGameMode.gameMode == GameMode.SinglePlayer)
         {
-            Debug.Log("SpwanExplorer");
-            SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
-            Debug.Log("SpwanDog");
+            explorer = SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
             SpawnCharacter(_dog, players[0], CharacterType.Dog, _dogSpawn);
         }
         else if (CurrentGameMode.gameMode == GameMode.LocalCoop)
         {
-            SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
+            explorer = SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
             SpawnCharacter(_dog, players[2], CharacterType.Dog, _dogSpawn);
         }
+        FindObjectOfType<CameraRotator>().SetPlayers(players);
     }
 
     private List<Player> InstantiatePlayers(GameMode gameMode)
@@ -42,11 +42,12 @@ public class PlayerSpawn : MonoBehaviour
         return players;
     }
     
-    private void SpawnCharacter(GameObject prefab, Player player, CharacterType characterType, Transform spawn)
+    private GameObject SpawnCharacter(GameObject prefab, Player player, CharacterType characterType, Transform spawn)
     {
         GameObject character = Instantiate(prefab, spawn.position, prefab.transform.rotation);
         CharacterController characterController = character.GetComponent<CharacterController>();
         characterController.SetPlayer(player);
         characterController.SetCharacterType(characterType);
+        return character;
     }
 }

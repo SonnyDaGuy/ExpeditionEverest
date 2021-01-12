@@ -170,4 +170,9 @@ public class User : MonoBehaviour
     {
         return _player.GetAxis("Vertical");
     }
+
+    public float GetRotateHorizontal()
+    {
+        return _player.GetAxis("RotateHorizontal");
+    }
 }
