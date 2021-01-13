@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuScript : MonoBehaviour
 {
     //public varible for binding button
+    public int sceneIndex;
     public Button StartTask;
     public Button ExitTask;
 
@@ -28,7 +29,7 @@ public class MainMenuScript : MonoBehaviour
 
     void StartGameEvent() 
     {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(sceneIndex);
     }
 
     void ExitGameEvent()
