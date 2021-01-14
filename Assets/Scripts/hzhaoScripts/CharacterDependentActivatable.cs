@@ -2,38 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterDependentActivatable : Activatable
+public abstract class CharacterDependentActivatable : Activatable
 {
-    //beviour type for dog
-    public enum BehaviourType { 
-        digging
-    }
+    [SerializeField] private CharacterType _characterRequiredForActivation;
 
-    [SerializeField] private BehaviourType behaviourForActivate;
-    public GameObject prefab1;
-
-    //active by dog to spawn item
-    public override void Activate(CharacterController characterController) 
+    public override void EnableOutline(bool enable, CharacterController characterController)
     {
-        if (characterController.GetCharacterType() == CharacterType.Dog) {
-            if (behaviourForActivate == BehaviourType.digging) {             
-                SpawnItem(prefab1, getTileLocation());                
-            }
+        if (characterController.GetCharacterType() == _characterRequiredForActivation)
+        {
+            base.EnableOutline(enable, characterController);
         }
     }
 
-    public void SpawnItem(GameObject prefab, Vector3 location) {
-        Instantiate(prefab, location, Quaternion.identity);
+    public override void Activate(CharacterController characterController)
+    {
+        if (characterController.GetCharacterType() == _characterRequiredForActivation)
+        {
+            ActivateAfterCheck(characterController);
+        }
     }
 
-    //these function are substitute
-    public Vector3 getTileLocation() {
-        Vector3 location = new Vector3(0, 0, 0);
-        return location;
-    }
-
-    public ItemType getItemType() {
-        ItemType item = ItemType.pickaxe;
-        return item;
-    }
+    protected abstract void ActivateAfterCheck(CharacterController characterController);
 }

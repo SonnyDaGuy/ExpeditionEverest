@@ -6,6 +6,8 @@ public class CameraRotator : MonoBehaviour
 {
     [SerializeField] private float _maxRotSpeed;
 
+    [SerializeField] private Transform _pivotPoint; 
+
     private List<Player> _players = new List<Player>();
 
     void Update()
@@ -17,7 +19,14 @@ public class CameraRotator : MonoBehaviour
         }
 
         float angleDifference = Mathf.Lerp(0, totalHorizontalRotateInput, _maxRotSpeed);
-        transform.RotateAround(Vector3.zero, Vector3.right, angleDifference);
+
+        RotatePointAroundPivot(transform.position, _pivotPoint.position, angleDifference * Vector3.right);
+        transform.RotateAround(Vector3.zero, Vector3.up, angleDifference);
+    }
+
+    public Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles)
+    {
+        return Quaternion.Euler(angles) * (point - pivot) + pivot;
     }
 
     public void SetPlayers(List<Player> players)

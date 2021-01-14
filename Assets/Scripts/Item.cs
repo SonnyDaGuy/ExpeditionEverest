@@ -16,7 +16,7 @@ public class Item : Activatable
         return _itemType;
     }
 
-    public void MakeItemVisual(bool isVisual = true)
+    public virtual void MakeItemVisual(bool isVisual = true)
     {
         foreach(Collider collider in GetComponentsInChildren<Collider>())
         {

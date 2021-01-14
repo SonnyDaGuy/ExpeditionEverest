@@ -9,25 +9,22 @@ public class PlayerSpawn : MonoBehaviour
 
     [SerializeField] private GameObject _explorer, _dog;
 
-    [SerializeField] private Transform _explorerSpawn, _dogSpawn; 
-
     private void Awake()
     {
         CurrentGameMode.SetGameMode(_gameMode); //temp
 
         List<Player> players = InstantiatePlayers(_gameMode);
-        GameObject explorer = null;
         if(CurrentGameMode.gameMode == GameMode.SinglePlayer)
         {
-            explorer = SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
-            SpawnCharacter(_dog, players[0], CharacterType.Dog, _dogSpawn);
+            Debug.Log("ISINDE SINGLE");
+            AssignPlayerToCharacter(players[1], _explorer);
+            AssignPlayerToCharacter(players[0], _dog);
         }
         else if (CurrentGameMode.gameMode == GameMode.LocalCoop)
         {
-            explorer = SpawnCharacter(_explorer, players[1], CharacterType.Explorer, _explorerSpawn);
-            SpawnCharacter(_dog, players[2], CharacterType.Dog, _dogSpawn);
+            AssignPlayerToCharacter(players[1], _explorer);
+            AssignPlayerToCharacter(players[2], _dog);
         }
-        FindObjectOfType<CameraRotator>().SetPlayers(players);
     }
 
     private List<Player> InstantiatePlayers(GameMode gameMode)
@@ -42,12 +39,11 @@ public class PlayerSpawn : MonoBehaviour
         return players;
     }
     
-    private GameObject SpawnCharacter(GameObject prefab, Player player, CharacterType characterType, Transform spawn)
+    private GameObject AssignPlayerToCharacter(Player player, GameObject character)
     {
-        GameObject character = Instantiate(prefab, spawn.position, prefab.transform.rotation);
+        Debug.Log("ASSIGNING: " + player.GetID() + " TO: " + character.name);
         CharacterController characterController = character.GetComponent<CharacterController>();
         characterController.SetPlayer(player);
-        characterController.SetCharacterType(characterType);
         return character;
     }
 }

@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class Torch : Item
 {
-    public void Light()
+    [SerializeField] private GameObject _fire, _pointLightInFire;
+
+    public override void MakeItemVisual(bool isVisual = true)
     {
-        GetComponent<ParticleSystem>().Play();
+        base.MakeItemVisual(isVisual);
+        _pointLightInFire.SetActive(!isVisual);
+    }
+
+    public void Light(CharacterController characterController)
+    {
+        _fire.SetActive(true);
         _itemType = ItemType.torchLit;
+        characterController.LightUpPlayer();
     }
 }

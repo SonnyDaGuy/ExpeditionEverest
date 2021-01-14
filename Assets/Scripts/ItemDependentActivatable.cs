@@ -6,6 +6,14 @@ public abstract class ItemDependentActivatable : Activatable
 {
     [SerializeField] private ItemType _itemRequiredForActivation;
 
+    public override void EnableOutline(bool enable, CharacterController characterController)
+    {
+        if (characterController.GetItemType() == _itemRequiredForActivation)
+        {
+            base.EnableOutline(enable, characterController);
+        }
+    }
+
     public override void Activate(CharacterController characterController)
     {
         if(characterController.GetItemType() == _itemRequiredForActivation)

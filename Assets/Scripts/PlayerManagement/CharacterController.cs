@@ -18,6 +18,10 @@ public class CharacterController : MonoBehaviour
 
     [SerializeField] private CharacterType _characterType;
 
+    [SerializeField] private GameObject _pointLight;
+
+    private Animator _animator;
+
     private Player _player;
 
     private Rigidbody _rigidbody;
@@ -31,6 +35,7 @@ public class CharacterController : MonoBehaviour
     void Awake()
     {
         _rigidbody = GetComponent<Rigidbody>();
+        _animator = GetComponentInChildren<Animator>();
     }
 
     void Start()
@@ -59,6 +64,16 @@ public class CharacterController : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        other.GetComponent<Activatable>().EnableOutline(true ,this);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        other.GetComponent<Activatable>().EnableOutline(false, this);
+    }
+
     public void SetPlayer(Player player)
     {
         _player = player;
@@ -84,6 +99,11 @@ public class CharacterController : MonoBehaviour
         return _positiveInput;
     }
 
+    public Item GetItem()
+    {
+        return _carriedItem;
+    }
+
     public ItemType GetItemType()
     {
         if (_carriedItem)
@@ -92,11 +112,14 @@ public class CharacterController : MonoBehaviour
         }
         return ItemType.NULL;
     }
+
     public void TryPickupItem(Item item)
     {
         if (GetItemType() == ItemType.NULL)
         {
+            _pointLight.SetActive(GetItemType() == ItemType.torchLit);
             _carriedItem = item;
+            item.EnableOutline(false, this);
             item.transform.SetParent(_carryingHand);
             item.transform.localPosition = Vector3.zero;
             item.transform.localRotation = Quaternion.identity;
@@ -106,7 +129,19 @@ public class CharacterController : MonoBehaviour
 
     public void UseItem()
     {
+        DestroyItemInfoInPlayer();
         Destroy(_carryingHand.GetChild(0).gameObject);
+    }
+
+    private void DestroyItemInfoInPlayer()
+    {
+        _pointLight.SetActive(false);
+        _carriedItem = null;
+    }
+
+    public void LightUpPlayer(bool on = true)
+    {
+        _pointLight.SetActive(on);
     }
 
     private void HandleInteractions()
@@ -122,6 +157,7 @@ public class CharacterController : MonoBehaviour
         if(GetItemType() != ItemType.NULL)
         {
             _carriedItem.MakeItemVisual(false);
+            DestroyItemInfoInPlayer();
             _carryingHand.DetachChildren();
         }
     }
@@ -139,7 +175,9 @@ public class CharacterController : MonoBehaviour
 
     private void HandleMovementInput()
     {
-        _movementDirection = _player.user.GetJoystick3D();
+        _animator.SetBool("IsMoving", _player.user.GetJoystick3D() != Vector3.zero);
+        _movementDirection = Camera.main.transform.rotation * _player.user.GetJoystick3D();
+        _movementDirection.y = 0;
     }
 
     private void HandleSwapCharacterInput()
@@ -165,6 +203,7 @@ public class CharacterController : MonoBehaviour
 
     private void HandleMovement()
     {
+        //transform.position();
         _rigidbody.MovePosition(transform.position + _movementDirection * _movementSpeed);
         HandleLookRotation();
     }
