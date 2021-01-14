@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 49476841683596518, guid: 27c30fdee1f93a94286f6aeafa169628, type: 3}
       propertyPath: m_Intensity
-      value: 0.5
+      value: 0.7
       objectReference: {fileID: 0}
     - target: {fileID: 49476841683596518, guid: 27c30fdee1f93a94286f6aeafa169628, type: 3}
       propertyPath: m_RenderMode
